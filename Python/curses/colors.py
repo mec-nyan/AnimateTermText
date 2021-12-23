@@ -12,6 +12,7 @@ def main(screen):
         screen.getch()
 
 
+    curses.curs_set(0)
     '''
     put('Testing terminal')
     put('Can you hear a beep?')
@@ -36,33 +37,22 @@ We'll be using this a lot.
 Cool, isn't it?'''
 
     screen.clear()
+    screen.addch('█', curses.A_BLINK)
+    screen.move(0, 0)
+    screen.getch()
 
-    wait = False
-    for l in example:
-        if l == '\n':
-            wait = True
-        if l != ' ':
-            time.sleep(1 / 20)
-        if wait and l != '\n':
-            wait = False
+    for i in range(len(example)):
+        l = example[i]
+        n = example[i + 1]
+        if l == '\n' and n != '\n':
             screen.getch()
-        screen.echochar(l)
+        if l != ' ':
+            time.sleep(1 / 10)
+        screen.addch(l)
+        screen.insstr('█', curses.A_BLINK)
+        screen.refresh()
 
-    # Displace characters?
-    curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_RED)
-    red_bg = curses.color_pair(2)
-
-    screen.clear()
-    screen.move(0, 0)
-    screen.addch(' ', red_bg | curses.A_BLINK)
-    screen.move(0, 0)
     screen.getch()
-    screen.insch('a')
-    screen.getch()
-    screen.move(0, 0)
-    screen.insstr('hello world', curses.A_BLINK)
-    screen.getch()
-
 
 
 if __name__ == '__main__':
