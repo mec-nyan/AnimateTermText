@@ -19,20 +19,20 @@ def main(screen):
     linum_fg = 237
     linum_bg = 235
     status_fg = 39
-    status_bg = 0
+    status_bg = 236
     logo_fg = 226
-    logo_bg = 0
-    mode_fg = 0
+    logo_bg = 236
+    mode_fg = 16
     mode_bg = 39
     inter_fg = 39
     inter_bg = 238
     git_fg = 250
     git_bg = 238
     outer_fg = 238
-    outer_bg = -1
+    outer_bg = 236
     right_tr_fg = 221
     right_tr_bg = 39
-    right_fg = 0
+    right_fg = 16
     right_bg = 221
 
     string_fg = 105
