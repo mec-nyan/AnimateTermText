@@ -42,6 +42,7 @@ def main(screen):
     semi_fg = 168
     func_fg = 36
     num_fg = 37
+    title_fg = 141
 
     curses.init_pair(4, inter_fg, inter_bg)
     inter = curses.color_pair(4)
@@ -71,6 +72,8 @@ def main(screen):
     func = curses.color_pair(16)
     curses.init_pair(17, num_fg, editor_bg)
     num = curses.color_pair(17)
+    curses.init_pair(18, title_fg, editor_bg)
+    title = curses.color_pair(18)
 
     # Editor windows
     editor = curses.newwin(lines -1, columns - 6, 0, 6)
@@ -80,6 +83,14 @@ def main(screen):
     editor.clear()
     # sample text
     sample = '''\
+~/*
+░░░░█▀▀░█▀█░█▀▄░░░█░░░█▀█░█▀█░█▀█░░░░
+░░░░█▀▀░█░█░█▀▄░░░█░░░█░█░█░█░█▀▀░░░░
+░░░░▀░░░▀▀▀░▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀░░░░░░
+*/~
+
+
+
 `let` x = 0;
 
 `for` (`let` i = 0; i < 10; ++i) {
@@ -89,10 +100,11 @@ def main(screen):
     console.log("i is odd");
   }
 }'''
-    editor.move(4, 0)
+    editor.move(2, 0)
     is_str = False
     is_kw = False
     is_fun = False
+    is_title = False
     brackets = '()[]{}'
     ops = '+-*/%=!<>|&'
     nums = '0123456789'
@@ -101,7 +113,7 @@ def main(screen):
             editor.addstr(c, bracket)
             is_fun = False
             continue
-        elif c in ops and not is_str:
+        elif c in ops and not is_str and not is_title:
             editor.addstr(c, op)
             continue
         elif c == ';':
@@ -112,6 +124,9 @@ def main(screen):
             continue
         elif c == '`':
             is_kw = not is_kw
+            continue
+        elif c == '~':
+            is_title = not is_title
             continue
         elif c == '"':
             is_str = not is_str
@@ -127,6 +142,8 @@ def main(screen):
             editor.bkgdset(string)
         elif is_fun:
             editor.bkgdset(func)
+        elif is_title:
+            editor.bkgdset(title)
         else:
             editor.bkgdset(editor_color)
         editor.addstr(c)
