@@ -18,13 +18,17 @@ def main(screen):
     editor_bg = 235
     linum_fg = 111
     linum_bg = 236
-    status_fg = 63
-    status_bg = -1
+    status_fg = 244
+    status_bg = 0
+    logo_fg = 226
+    logo_bg = 0
     mode_fg = 0
     mode_bg = 204
     inter_fg = 204
-    inter_bg = 237
-    outer_fg = 237
+    inter_bg = 238
+    git_fg = 250
+    git_bg = 238
+    outer_fg = 238
     outer_bg = -1
 
     curses.init_pair(4, inter_fg, inter_bg)
@@ -33,6 +37,10 @@ def main(screen):
     outer = curses.color_pair(5)
     curses.init_pair(6, mode_fg, mode_bg)
     mode = curses.color_pair(6)
+    curses.init_pair(7, git_fg, git_bg)
+    git = curses.color_pair(7)
+    curses.init_pair(8, logo_fg, logo_bg)
+    js = curses.color_pair(8)
 
     # Editor windows
     editor = curses.newwin(lines -1, columns - 5, 0, 4)
@@ -53,15 +61,28 @@ def main(screen):
         linum.addstr('{:4} '.format(i))
     linum.refresh()
     
+    pos = ypos, xpos = editor.getyx()
+
     # statusline
-    statusline = curses.newwin(1, columns, lines - 2, 0)
+    statusline = curses.newwin(2, columns, lines - 2, 0)
     curses.init_pair(3, status_fg, status_bg)
     status_color = curses.color_pair(3)
     statusline.bkgdset(status_color)
     statusline.clrtoeol()
-    statusline.addstr('  [ mode ]  ', mode) 
-    statusline.addstr(' smile ', inter)
-    statusline.addstr('', outer)
+    mode_text = '  NORMAL  '
+    git_text = '  master '
+    left_sep = ''
+    right_sep = ''
+    statusline.addstr(mode_text, mode) 
+    statusline.addstr(left_sep, inter)
+    statusline.addstr(git_text, git)
+    statusline.addstr(left_sep, outer)
+    statusline.addstr(' helloWorld.js ')
+    statusline.addstr('  ', js)
+    statusline.addstr(right_sep, outer)
+    statusline.addstr(' :{:2d} :{:3d} '.format(ypos, xpos), git)
+    statusline.addstr(right_sep, inter)
+    statusline.addstr(' I  gnu+linux ', mode | curses.A_ITALIC)
     statusline.refresh()
 
     screen.getch()
