@@ -45,9 +45,41 @@ def main(screen):
     numbers = '0123456789'
     tokens = []
 
+    is_comment = False
+    is_ml_comment = False
+    is_string = False 
+    string_type = ''
+
+
     for i in range(len(code)):
         char = code[i]
-        if char in brackets:
+        if is_string:
+            tokens[-1].put_char(char)
+            if char == string_type:
+                string_type = ''
+                is_string = False
+        elif char in ['"', "'"] and not is_comment:
+            string_type = char
+            is_string = True
+            tokens.append(Token('string', char))
+        elif is_comment:
+            if char == '\n':
+                is_comment = False
+                tokens.append(Token('wsp', char))
+            else:
+                tokens[-1].put_char(char)
+        elif is_ml_comment:
+            tokens[-1].put_char(char)
+            if char == '/' and code[i-1] == '*':
+                is_ml_comment = False
+        elif char == '/' and not is_string and not is_comment and not is_ml_comment:
+            if code[i+1] == char:
+                is_comment = True
+                tokens.append(Token('comment', char))
+            elif code[i+1] == '*':
+                is_ml_comment = True
+                tokens.append(Token('mlc', char))
+        elif char in brackets:
             tokens.append(Token('bracket', char))
         elif char in operators:
             tokens.append(Token('op', char))
@@ -65,7 +97,13 @@ def main(screen):
             editor.bkgdset(colours[2])
         elif t.name == 'num':
             editor.bkgdset(colours[3])
-        elif t.name == 'generic':
+        elif t.name == 'string':
+            editor.bkgdset(colours[4])
+        elif t.name == 'comment':
+            editor.bkgdset(colours[5])
+        elif t.name == 'mlc':
+            editor.bkgdset(colours[6])
+        elif t.name == 'generic' or t.name == 'wsp':
             editor.bkgdset(curses.color_pair(0))
 
         for c in t.chars:
