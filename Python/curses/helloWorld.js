@@ -5,7 +5,8 @@
 */
 
 // declare a variable
-let x = 0;
+let x = 0.24;
+const PI = 3.1416;
 
 for (let i = 0; i < 10; ++i) {
   if (i % 2 === 0) {

@@ -24,6 +24,8 @@ def main(screen):
         curses.init_pair(i + 1, i, -1)
         colours.append(curses.color_pair(i + 1))
 
+    colours.append(curses.color_pair(0))
+
     editor.clear()
     for i in range(16):
         editor.addstr(i, 4, f'This is colour number { i }', colours[i])
@@ -42,17 +44,26 @@ def main(screen):
 
     brackets = '()[]{}'
     operators = '+-*/%<>=!'
-    numbers = '0123456789'
+    keywords = ['for', 'if', 'let', 'var', 'const', 'else', 'while']
     tokens = []
 
     is_comment = False
     is_ml_comment = False
     is_string = False 
+    is_number = False
+    is_word = False
     string_type = ''
 
+    stream = list(code)
+    char, previous, _next = None, None, None
 
-    for i in range(len(code)):
-        char = code[i]
+    while stream:
+        char = stream.pop(0)
+        if stream:
+            _next = stream[0]
+        else:
+            _next = None
+
         if is_string:
             tokens[-1].put_char(char)
             if char == string_type:
@@ -70,44 +81,80 @@ def main(screen):
                 tokens[-1].put_char(char)
         elif is_ml_comment:
             tokens[-1].put_char(char)
-            if char == '/' and code[i-1] == '*':
+            if char == '/' and previous == '*':
                 is_ml_comment = False
         elif char == '/' and not is_string and not is_comment and not is_ml_comment:
-            if code[i+1] == char:
+            if _next == char:
                 is_comment = True
                 tokens.append(Token('comment', char))
-            elif code[i+1] == '*':
+            elif _next == '*':
                 is_ml_comment = True
                 tokens.append(Token('mlc', char))
+        elif is_number:
+            if char.isdigit() or char in ',.':
+                tokens[-1].put_char(char)
+            else:
+                is_number = False
+                stream.insert(0, char)
+                continue
+        elif is_word:
+            if char.isidentifier():
+                tokens[-1].put_char(char)
+            else:
+                is_word = False
+                stream.insert(0, char)
+                continue
+        elif char.isdigit() and not previous.isidentifier():
+            is_number = True
+            tokens.append(Token('num', char))
         elif char in brackets:
             tokens.append(Token('bracket', char))
         elif char in operators:
             tokens.append(Token('op', char))
-        elif char in numbers:
-            tokens.append(Token('num', char))
+        elif char.isidentifier():
+            is_word = True
+            tokens.append(Token('word', char))
         else:
             tokens.append(Token('generic', char))
 
+        previous = char
+
     # Show time!
     editor.clear()
-    for t in tokens:
+    previous, _next = None, None
+    while tokens:
+        t = tokens.pop(0)
+        if tokens:
+            _next = tokens[0]
+        else:
+            _next = None
+
         if t.name == 'bracket':
-            editor.bkgdset(colours[1])
+            editor.bkgdset(colours[7])
         elif t.name == 'op':
-            editor.bkgdset(colours[2])
-        elif t.name == 'num':
-            editor.bkgdset(colours[3])
-        elif t.name == 'string':
-            editor.bkgdset(colours[4])
-        elif t.name == 'comment':
             editor.bkgdset(colours[5])
+        elif t.name == 'num':
+            editor.bkgdset(colours[11])
+        elif t.name == 'string':
+            editor.bkgdset(colours[2])
+        elif t.name == 'comment':
+            editor.bkgdset(colours[0])
         elif t.name == 'mlc':
-            editor.bkgdset(colours[6])
+            editor.bkgdset(colours[14])
+        elif t.name == 'word':
+            if ''.join(t.chars) in keywords:
+                editor.bkgdset(colours[5])
+            elif previous and previous.chars[0] == '.' and _next and _next.chars[0] == '(':
+                editor.bkgdset(colours[12])
+            else:
+                editor.bkgdset(colours[-1])
         elif t.name == 'generic' or t.name == 'wsp':
-            editor.bkgdset(curses.color_pair(0))
+            editor.bkgdset(colours[-1])
 
         for c in t.chars:
             editor.addstr(c)
+
+        previous = t
 
     editor.getch()
     
