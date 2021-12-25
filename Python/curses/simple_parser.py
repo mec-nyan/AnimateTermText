@@ -31,16 +31,48 @@ def main(screen):
     editor.getch()
 
     # Ok let's parse our code
-    token, previous, _next = None, None, None
-    is_multline_comment = False
-    is_comment = False
-    is_string = False
+    class Token:
+        def __init__(self, name, char):
+            self.name = name
+            self.chars = [char]
+
+        def put_char(self, char):
+            self.chars.append(char)
+
+
+    brackets = '()[]{}'
+    operators = '+-*/%<>=!'
+    numbers = '0123456789'
+    tokens = []
 
     for i in range(len(code)):
-        token = code[i]
-        if i > 0: previous = code[i - 1]
-        if i < len(code) - 1: _next = code[i + 1]
+        char = code[i]
+        if char in brackets:
+            tokens.append(Token('bracket', char))
+        elif char in operators:
+            tokens.append(Token('op', char))
+        elif char in numbers:
+            tokens.append(Token('num', char))
+        else:
+            tokens.append(Token('generic', char))
 
+    # Show time!
+    editor.clear()
+    for t in tokens:
+        if t.name == 'bracket':
+            editor.bkgdset(colours[1])
+        elif t.name == 'op':
+            editor.bkgdset(colours[2])
+        elif t.name == 'num':
+            editor.bkgdset(colours[3])
+        elif t.name == 'generic':
+            editor.bkgdset(curses.color_pair(0))
+
+        for c in t.chars:
+            editor.addstr(c)
+
+    editor.getch()
+    
 
 
 
