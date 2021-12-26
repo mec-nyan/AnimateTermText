@@ -19,9 +19,14 @@ def main(screen):
     lines, columns = screen.getmaxyx()
 
     topw = curses.newwin(lines, columns)
-    topw.bkgd(colors[1])
+    topw.bkgdset(colors[1])
     topw.box()
     topw.getch()
+
+    popup = curses.newwin(20, 20, 4, 4)
+    popup.bkgdset(colors[2])
+    popup.box()
+    popup.getch()
 
 
 if __name__ == '__main__':
