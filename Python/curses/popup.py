@@ -12,7 +12,7 @@ def main(screen):
 
     colors = [curses.color_pair(0)]
     for i in range(16):
-        curses.init_pair(i + 1, -1, i)
+        curses.init_pair(i + 1, i, -1)
         colors.append(curses.color_pair(i + 1))
 
 
@@ -24,14 +24,21 @@ def main(screen):
     topw.box()
     topw.getch()
 
-    popup = curses.newwin(20, 20, 4, 4)
+    popup_width = 30
+    popup_height = 20
+    popup_title = ' <tip/> '
+    padding_left = (popup_width - len(popup_title)) // 2
+    fps = 40
+
+    popup = curses.newwin(1, popup_width, 4, 4)
     popup.bkgdset(colors[2])
-    popup.attron(colors[1])
-    for i in range(20):
-        popup.move(i, 0)
-        popup.clrtoeol()
+    for i in range(popup_height):
+        popup.clear()
+        popup.box()
+        popup.addstr(0, padding_left, ' <tip/> ', curses.A_REVERSE)
         popup.refresh()
-        curses.napms(25)
+        curses.napms(1000 // fps)
+        popup.resize(1 + i + 1, popup_width)
 
     popup.getch()
 
