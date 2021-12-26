@@ -12,7 +12,7 @@ def main(screen):
 
     colors = [curses.color_pair(0)]
     for i in range(16):
-        curses.init_pair(i + 1, i, -1)
+        curses.init_pair(i + 1, -1, i)
         colors.append(curses.color_pair(i + 1))
 
 
@@ -20,12 +20,20 @@ def main(screen):
 
     topw = curses.newwin(lines, columns)
     topw.bkgdset(colors[1])
+    topw.clrtobot()
     topw.box()
     topw.getch()
 
     popup = curses.newwin(20, 20, 4, 4)
     popup.bkgdset(colors[2])
-    popup.box()
+    popup.attron(colors[1])
+    popup.getch()
+    for i in range(20):
+        popup.move(i, 0)
+        popup.clrtoeol()
+        popup.refresh()
+        curses.napms(25)
+
     popup.getch()
 
 
