@@ -10,7 +10,7 @@ def main(screen):
     curses.start_color()
     curses.use_default_colors()
 
-    colors = [curses.color_pair(0)]
+    colors = []
     for i in range(16):
         curses.init_pair(i + 1, i, -1)
         colors.append(curses.color_pair(i + 1))
@@ -41,6 +41,24 @@ def main(screen):
         popup.resize(1 + i + 1, popup_width)
 
     popup.getch()
+
+    topw.clear()
+    topw.box()
+    topw.refresh()
+    popup.mvwin(4, 8)
+    popup.getch()
+
+    # Post it-like notes 
+    curses.init_pair(17, 239, 3)
+    yellow_bg = curses.color_pair(17)
+
+    postit = curses.newwin(10, 20, 2, 50)
+    postit.bkgdset(yellow_bg)
+    postit.clear()
+    postit.addstr(1, 1, "I'm a note...", curses.A_ITALIC)
+    postit.refresh()
+
+    topw.getch()
 
 
 if __name__ == '__main__':
