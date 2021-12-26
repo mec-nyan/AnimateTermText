@@ -27,7 +27,6 @@ def main(screen):
     popup = curses.newwin(20, 20, 4, 4)
     popup.bkgdset(colors[2])
     popup.attron(colors[1])
-    popup.getch()
     for i in range(20):
         popup.move(i, 0)
         popup.clrtoeol()
