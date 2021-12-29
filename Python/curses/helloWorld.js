@@ -8,10 +8,15 @@
 let x = 0.24;
 const PI = 3.1416;
 
+function put(text) {
+  console.log(text);
+  return true;
+}
+
 for (let i = 0; i < 10; ++i) {
   if (i % 2 === 0) {
-    console.log('"i" is even');
+    put('"i" is even');
   } else {
-    console.log('"i" is odd');
+    put('"i" is odd');
   }
 }

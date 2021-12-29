@@ -44,7 +44,8 @@ def main(screen):
 
     brackets = '()[]{}'
     operators = '+-*/%<>=!'
-    keywords = ['for', 'if', 'let', 'var', 'const', 'else', 'while']
+    keywords = ['for', 'function', 'if', 'let', 'var', 'const', 'else', 'while']
+    booleans = ['true', 'false']
     tokens = []
 
     is_comment = False
@@ -136,7 +137,7 @@ def main(screen):
         elif t.name == 'num':
             editor.bkgdset(colours[11])
         elif t.name == 'string':
-            editor.bkgdset(colours[2])
+            editor.bkgdset(colours[3])
         elif t.name == 'comment':
             editor.bkgdset(colours[0])
         elif t.name == 'mlc':
@@ -144,8 +145,12 @@ def main(screen):
         elif t.name == 'word':
             if ''.join(t.chars) in keywords:
                 editor.bkgdset(colours[5])
-            elif previous and previous.chars[0] == '.' and _next and _next.chars[0] == '(':
-                editor.bkgdset(colours[12])
+            elif ''.join(t.chars) in booleans:
+                editor.bkgdset(colours[6])
+            elif ''.join(t.chars) == 'return':
+                editor.bkgdset(colours[1])
+            elif _next and _next.chars[0] == '(':
+                editor.bkgdset(colours[2])
             else:
                 editor.bkgdset(colours[-1])
         elif t.name == 'generic' or t.name == 'wsp':
