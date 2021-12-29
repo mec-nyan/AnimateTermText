@@ -100,6 +100,10 @@ def parse(code):
     _next = None
     for i in range(len(tokens)):
         t = tokens[i]
+
+        if i > 0:
+            previous = tokens[i - 1]
+
         try:
             _next = tokens[i + 1]
         except IndexError:
@@ -115,6 +119,12 @@ def parse(code):
                 t.set_type('ret')
             elif _next and _next.chars[0] == '(':
                 t.set_type('func')
+        elif t.name == 'comment':
+            content = ''.join(t.chars)
+            if content[3:] == 'pause':
+                t.set_type('pause')
+                if previous and previous.chars[0] == '\n':
+                    previous.chars[0] = ''
 
     return tokens
 

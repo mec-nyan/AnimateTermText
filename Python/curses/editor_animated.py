@@ -226,6 +226,9 @@ def main(screen):
         elif t.name == 'string':
             editor.bkgdset(colours[3])
         elif t.name == 'comment':
+            if t.type_ == 'pause':
+                editor.getch()
+                continue
             editor.bkgdset(colours[0])
         elif t.name == 'mlc':
             editor.bkgdset(colours[14])
