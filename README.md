@@ -1,3 +1,3 @@
-# Animate text on a terminal screen with Javascript
+# Animated terminal editor
 
-This will (probably) be one of the tools used in our Youtube JS videos.
+An editor "simulator".
