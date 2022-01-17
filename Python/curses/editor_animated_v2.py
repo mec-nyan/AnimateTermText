@@ -111,7 +111,7 @@ def main(screen):
             if t.type_ == 'pause':
                 editor.getch()
                 continue
-            editor.bkgdset(colors[0])
+            editor.bkgdset(colors[8])
         elif t.name == 'mlc':
             editor.bkgdset(colors[14])
         elif t.name == 'word':
