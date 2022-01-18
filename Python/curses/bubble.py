@@ -94,6 +94,23 @@ def main(screen):
 
     win.getch()
 
+    bm_h = 5
+    bm_w = pane_w - 14
+    bm_y = 17
+    bm_x = 14
+    bubble_msg2 = curses.newwin(bm_h, bm_w, bm_y, bm_x)
+    bubble_msg2.bkgdset(colors[5])
+    bubble_msg2.addstr(4, bm_w-2, br_arrow)
+    bubble_msg2.refresh()
+    inner_msg2 = curses.newwin(bm_h, bm_w - 2, bm_y, bm_x)
+    inner_msg2.bkgdset(colors[5] | curses.A_REVERSE)
+    inner_msg2.clrtobot()
+    inner_msg2.addstr(1, 1, 'this is a bubble message')
+    inner_msg2.refresh()
+
+    win.getch()
+
+
 
 
 if __name__ == '__main__':
